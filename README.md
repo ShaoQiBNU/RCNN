@@ -30,11 +30,11 @@ R-CNN算法解读
 
 > IoU即表示(A∩B)/(AUB) ，如图所示：
 
-！！！！img
+![image](https://github.com/ShaoQiBNU/RCNN/blob/master/images/1.png)
 
 > 在(三)之后，获得2000×20维矩阵表示每个建议框是某个物体类别的得分情况，此时会遇到下图所示情况，同一个车辆目标会被多个建议框包围，这时需要非极大值抑制操作去除得分较低的候选框以减少重叠框。
 
-！！！！img
+![image](https://github.com/ShaoQiBNU/RCNN/blob/master/images/2.png)
 
 ## 2. IoU流程
 ```
@@ -53,12 +53,12 @@ R-CNN算法解读
 ## 1. 简介
 > 目标检测不仅是要对目标进行识别，还要完成定位任务，所以最终获得的bounding-box也决定了目标检测的精度。定位精度可以用算法得出的物体检测框与实际标注的物体边界框的IoU值来近似表示。如下图所示，绿色框为实际标准的卡宴车辆框，即Ground Truth；黄色框为selective search算法得出的建议框，即Region Proposal。即使黄色框中物体被分类器识别为卡宴车辆，但是由于绿色框和黄色框IoU值并不大，所以最后的目标检测精度并不高。采用回归器是为了对建议框进行校正，使得校正后的Region Proposal与selective search更接近， 以提高最终的检测精度。论文中采用bounding-box回归使mAP提高了3~4%。 
 
-！！！！img
+![image](https://github.com/ShaoQiBNU/RCNN/blob/master/images/3.png)
 
 ## 2. 过程 
 > Bounding box regression回归过程如下，如图所示：
 
-！！！！img
+![image](https://github.com/ShaoQiBNU/RCNN/blob/master/images/4.png)
 
 > 其中黄色框口*P*表示建议框Region Proposal，绿色窗口*G*表示实际框Ground Truth，红色窗口<a href="https://www.codecogs.com/eqnedit.php?latex=\widehat{G}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\widehat{G}" title="\widehat{G}" /></a>
 > 表示Region Proposal进行回归后的预测窗口。目标是找到*P*到<a href="https://www.codecogs.com/eqnedit.php?latex=\widehat{G}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\widehat{G}" title="\widehat{G}" /></a>的线性变换（注意：当Region Proposal与Ground Truth的IoU>0.6时可以认为是线性变换），使得<a href="https://www.codecogs.com/eqnedit.php?latex=\widehat{G}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\widehat{G}" title="\widehat{G}" /></a>与*G*越相近，这就相当于一个简单的可以用最小二乘法解决的线性回归问题。 
